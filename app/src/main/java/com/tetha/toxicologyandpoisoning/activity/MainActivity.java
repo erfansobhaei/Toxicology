@@ -7,6 +7,8 @@ import android.widget.Toast;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.tetha.toxicologyandpoisoning.R;
 import com.tetha.toxicologyandpoisoning.fragments.ItemsFragment;
+import com.tetha.toxicologyandpoisoning.fragments.SearchFragment;
+import com.tetha.toxicologyandpoisoning.fragments.StreamFragment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
         int id = item.getItemId();
 
         switch (id){
@@ -41,10 +45,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_main, new ItemsFragment(this)).commit();
                 break;
             case R.id.bottom_navigation_item_search:
-                Toast.makeText(this, "search fragment", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_main, new SearchFragment(this)).commit();
                 break;
             case R.id.bottom_navigation_item_stream:
-                Toast.makeText(this, "video fragment", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_main, new StreamFragment(this)).commit();
                 break;
         }
 
