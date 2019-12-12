@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_navigation_item_items"
+        android:icon="@drawable/ic_android_black_24dp"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/bottom_navigation_item_search"
+        android:icon="@drawable/ic_android_black_24dp"
+        android:title="Search" />
+
+    <item
+        android:id="@+id/bottom_navigation_item_stream"
+        android:icon="@drawable/ic_android_black_24dp"
+        android:title="Video">
+
+    </item>
+
+
+</menu>

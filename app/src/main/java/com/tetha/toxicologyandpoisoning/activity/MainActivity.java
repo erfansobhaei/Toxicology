@@ -1,81 +1,53 @@
 package com.tetha.toxicologyandpoisoning.activity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.tetha.toxicologyandpoisoning.R;
-import com.tetha.toxicologyandpoisoning.model.CategoryModel;
-import com.tetha.toxicologyandpoisoning.model.ItemModel;
-
-import java.util.ArrayList;
+import com.tetha.toxicologyandpoisoning.fragments.ItemsFragment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    public static ArrayList<String> categories = new ArrayList<>();
-
-    public static ArrayList<CategoryModel> categoryModels = new ArrayList<>();
-
-    DatabaseReference databaseReference;
+    BottomNavigationView mBottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getDataFromDatabase();
+        setupViews();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_main, new ItemsFragment(this)).commit();
+        mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 
 
     }
 
-    private void getDataFromDatabase() {
+    private void setupViews() {
+        mBottomNavigationView = findViewById(R.id.bottom_navigation_main);
+    }
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
 
+        switch (id){
+            case R.id.bottom_navigation_item_items:
+                getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_main, new ItemsFragment(this)).commit();
+                break;
+            case R.id.bottom_navigation_item_search:
+                Toast.makeText(this, "search fragment", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.bottom_navigation_item_stream:
+                Toast.makeText(this, "video fragment", Toast.LENGTH_SHORT).show();
+                break;
+        }
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int numberOfToxins = Integer.parseInt((String.valueOf((dataSnapshot.child("connectors").getChildrenCount()))));
-
-
-                for (int i = 0; i < numberOfToxins; i++) {
-
-
-                    // Read Category Data
-                    int categoryId = Integer.parseInt(String.valueOf(dataSnapshot.child("connectors").child(String.valueOf(i)).child("categoryId").getValue()));
-                    String categoryTitle = (String) dataSnapshot.child("categories").child(String.valueOf(categoryId)).child("title").getValue();
-
-                    // Read Item data
-                    String itemId = String.valueOf(dataSnapshot.child("connectors").child(String.valueOf(i)).child("toxinId").getValue());
-                    String itemTitle = String.valueOf(dataSnapshot.child("toxins").child(String.valueOf(itemId)).child("title").getValue());
-                    String itemDescription = String.valueOf(dataSnapshot.child("toxins").child(String.valueOf(itemId)).child("description").getValue());
-
-                    try {
-                        // Add item if category exists
-                        CategoryModel category = categoryModels.get(categoryId);
-                        category.addItem(new ItemModel(itemTitle, itemDescription));
-                    } catch (Exception e) {
-                        // Add new category and item
-                        categoryModels.add(new CategoryModel(categoryTitle));
-                        CategoryModel category = categoryModels.get(categoryId);
-                        category.addItem(new ItemModel(itemTitle, itemDescription));
-                    }
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        return true;
     }
 }
