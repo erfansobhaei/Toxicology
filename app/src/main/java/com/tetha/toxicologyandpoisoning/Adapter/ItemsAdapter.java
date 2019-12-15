@@ -1,12 +1,10 @@
 package com.tetha.toxicologyandpoisoning.Adapter;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tetha.toxicologyandpoisoning.R;
 import com.tetha.toxicologyandpoisoning.activity.ListActivity;
@@ -29,7 +27,7 @@ public class ItemsAdapter extends RecyclerView.Adapter <ItemsAdapter.ItemHolder>
     public ItemsAdapter.ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ItemHolder(inflater.inflate(R.layout.recyclerview_item , parent, false));
+        return new ItemHolder(inflater.inflate(R.layout.description_item, parent, false));
 
     }
 
