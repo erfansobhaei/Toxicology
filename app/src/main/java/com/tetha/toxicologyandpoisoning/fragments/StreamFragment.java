@@ -31,8 +31,8 @@ import com.tetha.toxicologyandpoisoning.R;
      @Override
      public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
          videoRecyclerView = view.findViewById(R.id.stream_recyclerView);
-         videoRecyclerView.setAdapter(new StreamRecyclerViewAdapter());
          videoRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+         videoRecyclerView.setAdapter(new StreamRecyclerViewAdapter());
      }
 
      @Override

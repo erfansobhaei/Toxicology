@@ -20,6 +20,7 @@ import com.tetha.toxicologyandpoisoning.model.CategoryModel;
 import com.tetha.toxicologyandpoisoning.model.ItemModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class SplashScreenActivity extends AppCompatActivity {

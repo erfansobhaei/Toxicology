@@ -32,7 +32,6 @@ public class ItemsFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.recyclerView_main_items);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.setAdapter(new ItemsAdapter());
-
     }
 
     @Override
