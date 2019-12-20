@@ -25,6 +25,5 @@ public class ListActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(new ListsAdapter(intent.getIntExtra("id", 0)));
 
-
     }
 }

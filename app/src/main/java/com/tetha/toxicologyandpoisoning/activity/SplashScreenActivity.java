@@ -1,15 +1,19 @@
 package com.tetha.toxicologyandpoisoning.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Spinner;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +29,9 @@ import java.util.Arrays;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
+    AlertDialog dialog;
+    SpinKitView progress_bar;
+
     public static ArrayList<String> categories = new ArrayList<>();
 
     public static ArrayList<CategoryModel> categoryModels = new ArrayList<>();
@@ -38,11 +45,41 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        progress_bar = findViewById(R.id.spinKitView);
 
         // Device connected to network
-        if (connectivityManager.getActiveNetworkInfo()!= null
+//        while(!(connectivityManager.getActiveNetworkInfo()!= null
+//                && connectivityManager.getActiveNetworkInfo().isAvailable()
+//                && connectivityManager.getActiveNetworkInfo().isConnected())) {
+//
+//            dialog = new AlertDialog.Builder(this).create();
+//            dialog.setTitle("Connection error");
+//            dialog.setMessage("Please check your internet connection and try again.");
+//            dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "TRY AGAIN", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialogInterface, int i) {
+//                    dialog.dismiss();
+//                }
+//            });
+//
+//        }
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                getDataFromDatabase();
+//                startActivity( new Intent(SplashScreenActivity.this, MainActivity.class));
+//                finish();
+//            }
+//        }, 3000);
+
+        checkConnection();
+    }
+
+    private void checkConnection() {
+        if(connectivityManager.getActiveNetworkInfo()!= null
                 && connectivityManager.getActiveNetworkInfo().isAvailable()
-                && connectivityManager.getActiveNetworkInfo().isConnected()){
+                && connectivityManager.getActiveNetworkInfo().isConnected()) {
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -52,13 +89,24 @@ public class SplashScreenActivity extends AppCompatActivity {
                     finish();
                 }
             }, 3000);
-        }
-        else {
-            //TODO: error activity: network is not connected!
-        }
 
+        } else {
+            progress_bar.setVisibility(View.INVISIBLE);
+            dialog = new AlertDialog.Builder(this).create();
+            dialog.setTitle("Connection error");
+            dialog.setMessage("Please check your internet connection and try again.");
+            dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "TRY AGAIN", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialog.dismiss();
+                    progress_bar.setVisibility(View.VISIBLE);
+                    checkConnection();
+                }
+            });
+            dialog.show();
+            dialog.setCanceledOnTouchOutside(false);
+        }
     }
-
 
     private void getDataFromDatabase() {
 

@@ -31,7 +31,7 @@ public class ItemsAdapter extends RecyclerView.Adapter <ItemsAdapter.ItemHolder>
     public ItemsAdapter.ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        return new ItemHolder(inflater.inflate(R.layout.description_item, parent, false));
+        return new ItemHolder(inflater.inflate(R.layout.search_result_items, parent, false));
 
     }
 
@@ -66,7 +66,7 @@ public class ItemsAdapter extends RecyclerView.Adapter <ItemsAdapter.ItemHolder>
         public ItemHolder(@NonNull View itemView) {
 
             super(itemView);
-            cardView = itemView.findViewById(R.id.item_cardView);
+            cardView = itemView.findViewById(R.id.search_result_item);
             textView = itemView.findViewById(R.id.item_textView);
 
         }
