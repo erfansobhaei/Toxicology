@@ -8,21 +8,27 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toolbar;
+
+import com.tetha.toxicologyandpoisoning.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.FirebaseApp;
-import com.tetha.toxicologyandpoisoning.R;
 
-//FIXME : fix titles in onBindViewHolder(...)
-//FIXME : fix getItemCount()
-
-public class StreamRecyclerViewAdapter extends RecyclerView.Adapter<StreamRecyclerViewViewHolder>{
+public class StreamRecyclerViewAdapter extends RecyclerView.Adapter<StreamRecyclerViewViewHolder> {
     private static final String TAG = "StreamRecyclerViewAdapt";
+    private ArrayList<String> links, titles;
 
+    public StreamRecyclerViewAdapter(ArrayList<String> links, ArrayList<String> titles) {
+        this.links = links;
+        this.titles = titles;
+    }
 
     @NonNull
     @Override
@@ -35,29 +41,30 @@ public class StreamRecyclerViewAdapter extends RecyclerView.Adapter<StreamRecycl
     @Override
     public void onBindViewHolder(@NonNull StreamRecyclerViewViewHolder holder, int position) {
 
-        Log.d(TAG ,"onBindViewHolder called .");
-        holder.webView.loadUrl("https://www.google.com");
-        holder.webView.getSettings().setJavaScriptEnabled(true);
 
-        holder.title.setText("this is holder title");
 
-        final String VIDEO_URL = holder.webView.getUrl();
-        holder.share_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, VIDEO_URL);
-                intent.setType("text/plain");
-                view.getContext().startActivity(Intent.createChooser(intent, "share"));
-            }
-        });
+            holder.webView.loadUrl(links.get(position));
+            holder.webView.getSettings().setJavaScriptEnabled(true);
+
+            holder.title.setText(titles.get(position));
+
+            final String VIDEO_URL = holder.webView.getUrl();
+            holder.share_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, VIDEO_URL);
+                    intent.setType("text/plain");
+                    view.getContext().startActivity(Intent.createChooser(intent, "share"));
+                }
+            });
+
     }
 
     @Override
     public int getItemCount() {
 
-        //FIXME : fix here
-        return 2;
+       return links.size();
     }
 }
 
@@ -67,6 +74,7 @@ class StreamRecyclerViewViewHolder extends RecyclerView.ViewHolder {
     TextView title;
     CardView parent;
     ImageView share_btn;
+
     public StreamRecyclerViewViewHolder(@NonNull View itemView) {
         super(itemView);
         title = itemView.findViewById(R.id.streamfragment_item_title);

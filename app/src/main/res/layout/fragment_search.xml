@@ -6,19 +6,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.SearchFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="15dp"
         android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editeText_search"
+        <EditText
+            android:id="@+id/editText_search"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:singleLine="true"
             android:maxLines="1"
-            android:outlineSpotShadowColor="@color/white"
+            android:imeOptions="actionSearch"
             android:hint="Search..."
             android:drawableEnd="@drawable/ic_search_black_24dp"/>
 

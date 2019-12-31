@@ -10,6 +10,8 @@ import android.os.Bundle;
 import com.tetha.toxicologyandpoisoning.Adapter.ListsAdapter;
 import com.tetha.toxicologyandpoisoning.R;
 
+
+//fixme : this class is useless now
 public class ListActivity extends AppCompatActivity {
 
     Intent intent;
@@ -23,7 +25,7 @@ public class ListActivity extends AppCompatActivity {
         intent = getIntent();
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerView.setAdapter(new ListsAdapter(intent.getIntExtra("id", 0)));
+        recyclerView.setAdapter(new ListsAdapter(intent.getIntExtra("id", 0), SplashScreenActivity.categoryModels));
 
     }
 }

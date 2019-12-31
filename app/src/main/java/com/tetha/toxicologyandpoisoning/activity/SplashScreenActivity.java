@@ -33,6 +33,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     SpinKitView progress_bar;
 
     public static ArrayList<String> categories = new ArrayList<>();
+    public static ArrayList<String> links = new ArrayList<>();
+    public static ArrayList<String> titles = new ArrayList<>();
 
     public static ArrayList<CategoryModel> categoryModels = new ArrayList<>();
 
@@ -47,32 +49,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         progress_bar = findViewById(R.id.spinKitView);
 
-        // Device connected to network
-//        while(!(connectivityManager.getActiveNetworkInfo()!= null
-//                && connectivityManager.getActiveNetworkInfo().isAvailable()
-//                && connectivityManager.getActiveNetworkInfo().isConnected())) {
-//
-//            dialog = new AlertDialog.Builder(this).create();
-//            dialog.setTitle("Connection error");
-//            dialog.setMessage("Please check your internet connection and try again.");
-//            dialog.setButton(AlertDialog.BUTTON_NEUTRAL, "TRY AGAIN", new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                    dialog.dismiss();
-//                }
-//            });
-//
-//        }
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                getDataFromDatabase();
-//                startActivity( new Intent(SplashScreenActivity.this, MainActivity.class));
-//                finish();
-//            }
-//        }, 3000);
-
         checkConnection();
     }
 
@@ -81,15 +57,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 && connectivityManager.getActiveNetworkInfo().isAvailable()
                 && connectivityManager.getActiveNetworkInfo().isConnected()) {
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
                     getDataFromDatabase();
-                    startActivity( new Intent(SplashScreenActivity.this, MainActivity.class));
-                    finish();
-                }
-            }, 3000);
-
         } else {
             progress_bar.setVisibility(View.INVISIBLE);
             dialog = new AlertDialog.Builder(this).create();
@@ -112,7 +80,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -125,6 +92,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     // Read Category Data
                     int categoryId = Integer.parseInt(String.valueOf(dataSnapshot.child("connectors").child(String.valueOf(i)).child("categoryId").getValue()));
                     String categoryTitle = (String) dataSnapshot.child("categories").child(String.valueOf(categoryId)).child("title").getValue();
+                    int categoryType = Integer.parseInt(String.valueOf(dataSnapshot.child("categories").child(String.valueOf(categoryId)).child("type").getValue()));
 
                     // Read Item data
                     String itemId = String.valueOf(dataSnapshot.child("connectors").child(String.valueOf(i)).child("toxinId").getValue());
@@ -137,13 +105,22 @@ public class SplashScreenActivity extends AppCompatActivity {
                         category.addItem(new ItemModel(itemTitle, itemDescription));
                     } catch (Exception e) {
                         // Add new category and item
-                        categoryModels.add(new CategoryModel(categoryTitle));
+                        categoryModels.add(new CategoryModel(categoryTitle, categoryType));
                         CategoryModel category = categoryModels.get(categoryId);
                         category.addItem(new ItemModel(itemTitle, itemDescription));
                     }
 
                 }
 
+                for (DataSnapshot snapshot: dataSnapshot.child("videos").getChildren()){
+
+                    links.add(String.valueOf(snapshot.child("url").getValue()));
+                    titles.add(String.valueOf(snapshot.child("title").getValue()));
+
+                }
+
+                startActivity( new Intent(SplashScreenActivity.this, MainActivity.class));
+                finish();
             }
 
             @Override

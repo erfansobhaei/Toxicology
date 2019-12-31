@@ -12,25 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/textView_itemDescription_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="toxic type"
             android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="false"
             android:textColor="@color/black"
             android:textSize="40sp" />
 
-        <ImageView
-            android:id="@+id/activity_item_description_share_imageView"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:adjustViewBounds="true"
-            android:layout_weight="1"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            app:srcCompat="@drawable/ic_share_black" />
 
     </RelativeLayout>
 
@@ -39,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/textView_itemDescription_description"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

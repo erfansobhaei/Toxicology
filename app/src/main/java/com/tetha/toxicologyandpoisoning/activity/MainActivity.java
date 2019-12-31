@@ -1,8 +1,9 @@
 package com.tetha.toxicologyandpoisoning.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.tetha.toxicologyandpoisoning.R;
@@ -24,7 +25,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         setupViews();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout_main, new ItemsFragment(this)).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.frame_layout_main, new ItemsFragment(this)).commitNow();
+
         mBottomNavigationView.setOnNavigationItemSelectedListener(this);
 
 
@@ -53,5 +55,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
 
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent = new Intent(this, AboutActivity.class);
+        startActivity(intent);
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.about_menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }
