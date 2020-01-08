@@ -98,7 +98,7 @@ public class SearchFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 ArrayList<CategoryModel> data = new ArrayList<>();
-                data.add(new CategoryModel("-1", 0));
+                data.add(new CategoryModel("", 0, 0));
 
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()){
                     data.get(0).addItem(new ItemModel(String.valueOf(snapshot.child("title").getValue()), String.valueOf(snapshot.child("description").getValue())));

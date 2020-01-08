@@ -32,7 +32,6 @@ public class SplashScreenActivity extends AppCompatActivity {
     AlertDialog dialog;
     SpinKitView progress_bar;
 
-    public static ArrayList<String> categories = new ArrayList<>();
     public static ArrayList<String> links = new ArrayList<>();
     public static ArrayList<String> titles = new ArrayList<>();
 
@@ -83,34 +82,28 @@ public class SplashScreenActivity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                int numberOfToxins = Integer.parseInt((String.valueOf((dataSnapshot.child("connectors").getChildrenCount()))));
 
-
-                for (int i = 0; i < numberOfToxins; i++) {
-
-
-                    // Read Category Data
-                    int categoryId = Integer.parseInt(String.valueOf(dataSnapshot.child("connectors").child(String.valueOf(i)).child("categoryId").getValue()));
-                    String categoryTitle = (String) dataSnapshot.child("categories").child(String.valueOf(categoryId)).child("title").getValue();
-                    int categoryType = Integer.parseInt(String.valueOf(dataSnapshot.child("categories").child(String.valueOf(categoryId)).child("type").getValue()));
-
-                    // Read Item data
-                    String itemId = String.valueOf(dataSnapshot.child("connectors").child(String.valueOf(i)).child("toxinId").getValue());
-                    String itemTitle = String.valueOf(dataSnapshot.child("toxins").child(String.valueOf(itemId)).child("title").getValue());
-                    String itemDescription = String.valueOf(dataSnapshot.child("toxins").child(String.valueOf(itemId)).child("description").getValue());
-
-                    try {
-                        // Add item if category exists
-                        CategoryModel category = categoryModels.get(categoryId);
-                        category.addItem(new ItemModel(itemTitle, itemDescription));
-                    } catch (Exception e) {
-                        // Add new category and item
-                        categoryModels.add(new CategoryModel(categoryTitle, categoryType));
-                        CategoryModel category = categoryModels.get(categoryId);
-                        category.addItem(new ItemModel(itemTitle, itemDescription));
-                    }
-
+                // Read Categories
+                for (DataSnapshot snapshot:dataSnapshot.child("categories").getChildren()){
+                    String title = String.valueOf( snapshot.child("title").getValue() );
+                    int parentId = Integer.parseInt(String.valueOf( snapshot.child("parentId").getValue()) );
+                    int id = categoryModels.size();
+                    categoryModels.add(new CategoryModel(title, parentId, id));
                 }
+
+                // Read Connectors
+                for (DataSnapshot snapshot: dataSnapshot.child("connectors").getChildren()){
+                    int toxinId = Integer.parseInt(String.valueOf(snapshot.child("toxinId").getValue()));
+                    int categoryId = Integer.parseInt(String.valueOf(snapshot.child("categoryId").getValue()));
+
+                    String title = String.valueOf( dataSnapshot.child("toxins").child(String.valueOf(toxinId)).child("title").getValue() );
+                    String description = String.valueOf( dataSnapshot.child("toxins").child(String.valueOf(toxinId)).child("description").getValue() );
+
+                    ItemModel item = new ItemModel(title, description);
+
+                    categoryModels.get(categoryId).addItem(item);
+                }
+
 
                 for (DataSnapshot snapshot: dataSnapshot.child("videos").getChildren()){
 

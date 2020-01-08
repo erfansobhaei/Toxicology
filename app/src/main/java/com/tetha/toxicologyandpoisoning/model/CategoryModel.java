@@ -14,12 +14,19 @@ public class CategoryModel {
     }
 
     String title;
-    int type;
+    int parentId;
+    int id;
+
+    public int getParentId() {
+        return parentId;
+    }
+
     ArrayList<ItemModel> items = new ArrayList<>();
 
-    public CategoryModel(String title, int type) {
+    public CategoryModel(String title, int parentId, int id) {
         this.title = title;
-        this.type = type;
+        this.parentId = parentId;
+        this.id = id;
     }
 
     public void addItem(ItemModel itemModel){

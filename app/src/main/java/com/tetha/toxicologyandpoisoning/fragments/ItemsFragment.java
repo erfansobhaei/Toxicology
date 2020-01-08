@@ -18,6 +18,9 @@ import android.widget.LinearLayout;
 import com.tetha.toxicologyandpoisoning.Adapter.ItemsAdapter;
 import com.tetha.toxicologyandpoisoning.R;
 import com.tetha.toxicologyandpoisoning.activity.SplashScreenActivity;
+import com.tetha.toxicologyandpoisoning.model.CategoryModel;
+
+import java.util.ArrayList;
 
 public class ItemsFragment extends Fragment {
 
@@ -32,7 +35,13 @@ public class ItemsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mRecyclerView = view.findViewById(R.id.recyclerView_main_items);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.setAdapter(new ItemsAdapter(SplashScreenActivity.categoryModels));
+        ArrayList<CategoryModel> data = new ArrayList<>();
+        for (CategoryModel model: SplashScreenActivity.categoryModels){
+            if (model.getParentId() == -1){
+                data.add(model);
+            }
+        }
+        mRecyclerView.setAdapter(new ItemsAdapter(data));
     }
 
     @Override
