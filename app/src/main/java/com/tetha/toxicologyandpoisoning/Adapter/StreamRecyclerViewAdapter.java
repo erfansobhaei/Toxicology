@@ -33,7 +33,7 @@ public class StreamRecyclerViewAdapter extends RecyclerView.Adapter<StreamRecycl
     @NonNull
     @Override
     public StreamRecyclerViewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.items_stream, parent, false);
         StreamRecyclerViewViewHolder viewHolder = new StreamRecyclerViewViewHolder(view);
         return viewHolder;
     }

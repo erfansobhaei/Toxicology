@@ -7,11 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
-import android.widget.Spinner;
 
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.google.firebase.database.DataSnapshot;
@@ -22,9 +19,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.tetha.toxicologyandpoisoning.R;
 import com.tetha.toxicologyandpoisoning.model.CategoryModel;
 import com.tetha.toxicologyandpoisoning.model.ItemModel;
+import com.tetha.toxicologyandpoisoning.model.LinkerModel;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -32,6 +30,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     AlertDialog dialog;
     SpinKitView progress_bar;
 
+    public static ArrayList<LinkerModel> linker = new ArrayList<>();
     public static ArrayList<String> links = new ArrayList<>();
     public static ArrayList<String> titles = new ArrayList<>();
 
@@ -82,6 +81,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int mainCategoryCounter=0;
 
                 // Read Categories
                 for (DataSnapshot snapshot:dataSnapshot.child("categories").getChildren()){
@@ -89,6 +89,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     int parentId = Integer.parseInt(String.valueOf( snapshot.child("parentId").getValue()) );
                     int id = categoryModels.size();
                     categoryModels.add(new CategoryModel(title, parentId, id));
+                    if(parentId == -1) mainCategoryCounter++;
                 }
 
                 // Read Connectors
@@ -104,6 +105,19 @@ public class SplashScreenActivity extends AppCompatActivity {
                     categoryModels.get(categoryId).addItem(item);
                 }
 
+//                System.out.println("here here");
+//                for(CategoryModel model : categoryModels) {
+//                    System.out.println("parent id : " + model.getParentId());
+//                    System.out.println("id : " + model.getId());
+//
+//                    for (ItemModel model1 : model.getItems()) {
+//                        System.out.println("    model " + model.getParentId() + " | item id : " + model.getId() + " --> " + model1.getTitle());
+//
+//                    }
+//                    System.out.println("-----------------------------------------");
+//                }
+
+                linker = makeLinker(mainCategoryCounter);
 
                 for (DataSnapshot snapshot: dataSnapshot.child("videos").getChildren()){
 
@@ -122,4 +136,20 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         });
     }
+
+    private ArrayList<LinkerModel> makeLinker(int mainCategoryCounter) {
+        ArrayList<LinkerModel> linkerModels = new ArrayList<>();
+        for(int i=0 ; i<mainCategoryCounter ; i++) {
+            ArrayList<CategoryModel> arrayList = new ArrayList<>();
+            for(CategoryModel model : categoryModels) {
+                if(model.getParentId() == i)
+                    arrayList.add(model);
+
+            }
+            linkerModels.add(new LinkerModel(i, arrayList));
+
+        }
+        return linkerModels;
+    }
+
 }

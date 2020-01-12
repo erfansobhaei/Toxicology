@@ -41,7 +41,7 @@ public class ItemsFragment extends Fragment {
                 data.add(model);
             }
         }
-        mRecyclerView.setAdapter(new ItemsAdapter(data));
+        mRecyclerView.setAdapter(new ItemsAdapter(data, SplashScreenActivity.linker));
     }
 
     @Override

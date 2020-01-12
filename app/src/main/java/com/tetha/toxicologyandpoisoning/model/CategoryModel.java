@@ -33,6 +33,9 @@ public class CategoryModel {
         items.add(itemModel);
     }
 
+    public int getId() {
+        return id;
+    }
 
     public String getTitle() {
         return title;

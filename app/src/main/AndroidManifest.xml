@@ -13,6 +13,7 @@
         <activity android:name=".activity.AboutActivity"></activity>
         <activity android:name=".activity.ItemDescriptionActivity" />
         <activity android:name=".activity.ListActivity" />
+        <activity android:name=".activity.ItemListActivity" />
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashScreen">
