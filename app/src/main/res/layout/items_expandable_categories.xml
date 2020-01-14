@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/search_result_item"
+    android:id="@+id/item_expandable_categories"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
@@ -18,7 +18,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/title_item"
+            android:id="@+id/expandable_category_head_container"
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal"
@@ -32,7 +32,7 @@
                 app:srcCompat="@drawable/flasks" />
 
             <TextView
-                android:id="@+id/item_textView"
+                android:id="@+id/expandable_category_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"

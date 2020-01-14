@@ -8,49 +8,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.tetha.toxicologyandpoisoning.R;
+import com.tetha.toxicologyandpoisoning.activity.ItemListActivity;
 import com.tetha.toxicologyandpoisoning.activity.ListActivity;
-import com.tetha.toxicologyandpoisoning.activity.SplashScreenActivity;
 import com.tetha.toxicologyandpoisoning.model.CategoryModel;
+import com.tetha.toxicologyandpoisoning.model.LinkerModel;
 
 
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-//FIXME : when first time we come in this fragment its empty
-//FIXME : when data is empty it import two empty cardView to recyclerView
 
 public class ItemsAdapter extends RecyclerView.Adapter <ItemsAdapter.ItemHolder> {
     private static final String TAG = "ItemsAdapter";
+
     Context activityContext;
-
     ArrayList<CategoryModel> data;
+    ArrayList<LinkerModel> linker;
 
-    public ItemsAdapter (ArrayList<CategoryModel> data){
+    public ItemsAdapter (ArrayList<CategoryModel> data, ArrayList<LinkerModel> linker){
         this.data = data;
+        this.linker = linker;
     }
 
     @NonNull
     @Override
-    public ItemsAdapter.ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+    public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         activityContext = parent.getContext();
-        return new ItemHolder(inflater.inflate(R.layout.search_result_items, parent, false));
+        return new ItemHolder(inflater.inflate(R.layout.items_expandable_categories, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemsAdapter.ItemHolder holder, final int position) {
-        
+    public void onBindViewHolder(@NonNull ItemHolder holder, final int position) {
+
         try {
 
-            holder.textView.setText( data.get(position).getTitle() );
+            holder.title.setText( data.get(position).getTitle() );
             Log.d(TAG, "onBindViewHolder: "+ data.get(position).getTitle());
 //            holder.cardView.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -60,16 +58,34 @@ public class ItemsAdapter extends RecyclerView.Adapter <ItemsAdapter.ItemHolder>
 //                    v.getContext().startActivity(intent);
 //                }
 //            });
-            holder.subitems.setLayoutManager(new LinearLayoutManager(activityContext));
-            holder.subitems.setAdapter(new ListsAdapter(position, SplashScreenActivity.categoryModels));
+
+            holder.headContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(linker.get(position).getItems().size() != 0) {
+                        CategoryModel cm = data.get(position);
+                        cm.setExpanded(!cm.isExpanded());
+                        notifyItemChanged(position);
+                    } else {
+                        Intent intent = new Intent(activityContext , ItemListActivity.class);
+                        intent.putExtra("id", position);
+                        activityContext.startActivity(intent);
+                    }
+                }
+            });
+
+            holder.recyclerView.setLayoutManager(new LinearLayoutManager(activityContext));
+            holder.recyclerView.setAdapter(new SubItemAdapter(position ,linker.get(position).getItems()));
 
         } catch(NullPointerException err) {
             Log.e("items adapter", "data ArrayList is empty!");
         } finally {
 
             boolean isExpanded = data.get(position).isExpanded();
-            if(SplashScreenActivity.categoryModels.get(position).getSize() != 0)
-                holder.subitems.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+            if(linker.get(position).getItems().size() != 0) {
+                holder.recyclerView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+            }
+            // todo : else -->
         }
     }
 
@@ -79,24 +95,15 @@ public class ItemsAdapter extends RecyclerView.Adapter <ItemsAdapter.ItemHolder>
     }
 
     public class ItemHolder extends RecyclerView.ViewHolder {
-        TextView textView;
-        RecyclerView subitems;
-        LinearLayout title;
+        TextView title;
+        RecyclerView recyclerView;
+        LinearLayout headContainer;
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
-            title = itemView.findViewById(R.id.title_item);
-            textView = itemView.findViewById(R.id.item_textView);
-            subitems = itemView.findViewById(R.id.searchResultItems_layout_subItems_recyclerView);
-
-            title.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    CategoryModel cm = data.get(getAdapterPosition());
-                    cm.setExpanded(!cm.isExpanded());
-                    notifyItemChanged(getAdapterPosition());
-                }
-            });
+            headContainer = itemView.findViewById(R.id.expandable_category_head_container);
+            recyclerView = itemView.findViewById(R.id.searchResultItems_layout_subItems_recyclerView);
+            title = itemView.findViewById(R.id.expandable_category_title);
         }
     }
 }
